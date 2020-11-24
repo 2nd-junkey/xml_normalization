@@ -17,7 +17,7 @@ namespace xml_normalization
             var xDoc = XDocument.Load(setting.source);
             var ans = xDoc.Declaration.ToString() + "\n";
             ans += dump(xDoc.Root, 0);
-            Console.WriteLine(ans);
+            // Console.WriteLine(ans);
 
             // 出力
             using (var sw = new StreamWriter(setting.dest, false, Encoding.UTF8))
@@ -83,7 +83,7 @@ namespace xml_normalization
                 var tabs_ = tabs + "\t\t";
                 foreach (var attribute in element.Attributes())
                 {
-                    combined += $"{tabs_}{attribute.Name}={attribute.Value}\n";
+                    combined += $"{tabs_}{attribute.Name}=\"{attribute.Value}\"\n";
                 }
                 combined += $"{tabs}>\n";
             }
@@ -95,7 +95,7 @@ namespace xml_normalization
             if (!element.HasElements
                 && !element.IsEmpty)
             {
-                combined += $"{tabs}\t{element.Value}\n";
+                combined += $"{tabs}\t\"{element.Value}\"\n";
             }
             foreach (var node in element.Elements())
             {
