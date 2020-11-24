@@ -2,7 +2,7 @@
   "profiles": {
     "xml_normalization": {
       "commandName": "Project",
-      "commandLineArgs": "\"C:\\Users\\broke\\source\\repos\\xml_normalization\\xml_normalization\\source.xml\" \"C:\\Users\\broke\\source\\repos\\xml_normalization\\xml_normalization\\dest.xml\" "
+      "commandLineArgs": "-i \"C:\\Users\\broke\\source\\repos\\xml_normalization\\xml_normalization\\source.xml\""
     }
   }
 }
