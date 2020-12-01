@@ -15,6 +15,7 @@ namespace xml_normalization
 
             // xml解析して出力用string生成
             var xDoc = XDocument.Load(setting.source);
+            // OPTIMIZE: リストにした方が見やすいか
             var ans = xDoc.Declaration.ToString() + "\n";
             ans += dump(xDoc.Root, 0);
             // Console.WriteLine(ans);
@@ -36,6 +37,7 @@ namespace xml_normalization
             }
 
             // 引数判定
+            // HACK: もうちょい奇麗にしたい
             if (args[0] == "-i")
             {
                 setting.source = args[1];
@@ -83,7 +85,13 @@ namespace xml_normalization
                 var tabs_ = tabs + "\t\t";
                 foreach (var attribute in element.Attributes())
                 {
-                    combined += $"{tabs_}{attribute.Name}=\"{attribute.Value}\"\n";
+                    combined += $"{tabs_}{attribute}\n";
+                }
+                // 要素や子ノードが無いなら閉じる
+                if (!element.HasElements)
+                {
+                    combined += $"{tabs}/>\n";
+                    return combined;
                 }
                 combined += $"{tabs}>\n";
             }
@@ -91,12 +99,13 @@ namespace xml_normalization
             {
                 combined = $"{tabs}<{element.Name}>\n";
             }
-            // 要素・子ノードが有ったら1tab足して次の行に追加
-            if (!element.HasElements
-                && !element.IsEmpty)
+            // 要素が有ったら1tab足して次の行に追加
+            if (element.Value != ""
+                && (from n in element.Nodes() where n.ToString() == element.Value select n).Any())
             {
-                combined += $"{tabs}\t\"{element.Value}\"\n";
+                combined += $"{tabs}\t{element.Value}\n";
             }
+            // 子ノードが有ったら1tab足して次の行に追加
             foreach (var node in element.Elements())
             {
                 combined += dump(node, depth + 1);
